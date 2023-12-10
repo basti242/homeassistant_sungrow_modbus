@@ -1,0 +1,365 @@
+# Home Assistant Sungrow inverter integration
+# https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
+# by Martin Kaiser
+# last update: 2023-09-28
+
+modbus:
+  - name: WR2_Sungrow_SG6.0RT
+    type: tcp
+    host: !secret sungrow_wr2_modbus_host_ip
+    port: !secret sungrow_wr2_modbus_port
+    retries: 10
+
+    sensors:
+      - name: WR2_Sungrow device type code
+        unique_id: wr2_dev_code
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 4999 # reg 5000
+        input_type: input
+        data_type: uint16
+        scan_interval: 600
+
+      - name: WR2_Inverter temperature
+        unique_id: wr2_inverter_temperature
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5007 # reg 5008
+        input_type: input
+        data_type: int16
+        precision: 1
+        unit_of_measurement: °C
+        device_class: Temperature
+        scale: 0.1
+        scan_interval: 10
+
+      - name: WR2_MPPT1 voltage
+        unique_id: wr2_mppt1_voltage
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5010 # reg 5011
+        input_type: input
+        data_type: uint16
+        precision: 1
+        unit_of_measurement: V
+        device_class: Voltage
+        scale: 0.1
+        scan_interval: 10
+
+      - name: WR2_MPPT1 current
+        unique_id: wr2_mppt1_current
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5011 # reg 5012
+        input_type: input
+        data_type: uint16
+        precision: 2
+        unit_of_measurement: A
+        device_class: Current
+        scale: 0.1
+        scan_interval: 10
+
+      - name: WR2_MPPT2 voltage
+        unique_id: wr2_mppt2_voltage
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5012 # reg 5013
+        input_type: input
+        data_type: uint16
+        precision: 1
+        unit_of_measurement: V
+        device_class: Voltage
+        scale: 0.1
+        scan_interval: 10
+
+      - name: WR2_MPPT2 current
+        unique_id: wr2_mppt2_current
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5013 # reg 5014
+        input_type: input
+        data_type: uint16
+        precision: 2
+        unit_of_measurement: A
+        device_class: Current
+        scale: 0.1
+        scan_interval: 10
+
+      - name: WR2_Total DC power
+        unique_id: wr2_total_dc_power
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5016 # reg 5017
+        input_type: input
+        data_type: uint32
+        swap: word
+        precision: 0
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        scale: 1
+        scan_interval: 10
+
+      - name: WR2_Grid frequency
+        unique_id: wr2_grid_frequency
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5035 # reg 5036
+        input_type: input
+        data_type: uint16
+        precision: 2
+        unit_of_measurement: "Hz"
+        device_class: frequency
+        state_class: measurement
+        scale: 0.1
+        scan_interval: 10
+
+      - name: WR2_Reactive power
+        unique_id: wr2_reactive_power
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5032 # reg 5033
+        input_type: input
+        data_type: int32
+        swap: word
+        precision: 0
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        scale: 1
+        scan_interval: 10
+
+      - name: WR2_Power factor
+        unique_id: wr2_power_factor
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5034 # reg 5035
+        input_type: input
+        data_type: int16
+        precision: 3
+        unit_of_measurement: "%"
+        device_class: power_factor
+        state_class: measurement
+        scale: 0.001
+        scan_interval: 10
+
+      - name: WR2_Meter active power raw
+        unique_id: wr2_meter_active_power_raw
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5600 # reg 5601
+        input_type: input
+        data_type: int32
+        swap: word
+        precision: 0
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        scale: 1
+        scan_interval: 10
+
+      - name: WR2_BDC rated power
+        unique_id: wr2_bdc_rated_power
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5627 # reg 5628
+        input_type: input
+        data_type: uint16
+        unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
+        scale: 100
+        scan_interval: 600
+
+      - name: WR2_System state
+        unique_id: wr2_system_state
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5037 # reg 5038
+        input_type: input
+        data_type: uint16
+        precision: 0
+        scale: 1
+        scan_interval: 10
+
+      - name: WR2_Running state
+        unique_id: wr2_running_state
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5038 # reg 5039
+        input_type: input
+        data_type: uint16
+        precision: 0
+        scale: 1
+        scan_interval: 10
+
+      - name: WR2_Daily PV generation
+        unique_id: wr2_daily_pv_generation
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5002 # reg 5003
+        input_type: input
+        data_type: uint16
+        precision: 1
+        unit_of_measurement: kWh
+        device_class: energy
+        state_class: total_increasing
+        scale: 0.1
+        scan_interval: 600
+
+      - name: WR2_Total PV generation
+        unique_id: wr2_total_pv_generation
+        slave: !secret sungrow_wr2_modbus_slave
+        address: 5003 # reg 5004
+        input_type: input
+        data_type: uint32
+        swap: word
+        precision: 1
+        unit_of_measurement: kWh
+        device_class: energy
+        state_class: total
+
+        scan_interval: 600
+
+
+# 'virtual' template sensors for better readability
+template:
+  - binary_sensor:
+      - name: WR2_PV generating
+        unique_id: wr2_pv_generating
+        availability: >-
+          {{states('sensor.wr2_running_state')|is_number or 
+            states('sensor.wr2_total_dc_power')|is_number
+          }}
+        delay_on:
+          seconds: 60
+        state: >-
+          {% if states('sensor.wr2_running_state')|is_number %}
+            {# use available sensor running_state #}
+            {{ states('sensor.wr2_running_state')|int(default=0)|bitwise_and(0x1) > 0 }}
+          {% else %} 
+            {# workaround for SH*RS inverters without working running_state #}
+            {% if states('sensor.wr2_total_dc_power')|int > 0 %}
+              1
+            {% else %} 
+              0 
+            {% endif %}
+          {% endif %}
+
+
+  - sensor:
+      - name: WR2_MPPT1 power
+        unique_id: wr2_mppt1_power
+        unit_of_measurement: W
+        device_class: power
+        availability: "{{states('sensor.wr2_mppt1_voltage')|is_number and states('sensor.wr2_mppt1_current')|is_number }}"
+        state: "{{ (states('sensor.wr2_mppt1_voltage') | float * states('sensor.wr2_mppt1_current') | float) |int }}"
+
+      - name: WR2_MPPT2 power
+        unique_id: wr2_mppt2_power
+        unit_of_measurement: W
+        device_class: power
+        availability: "{{states('sensor.wr2_mppt2_voltage')|is_number and states('sensor.wr2_mppt2_current')|is_number }}"
+        state: "{{ (states('sensor.wr2_mppt2_voltage') | float * states('sensor.wr2_mppt2_current') | float) |int }}"
+
+      - name: WR2_Sungrow inverter state
+        unique_id: wr2_inverter_state
+        state: >-
+          {% if ((states('sensor.wr2_system_state') | int(default=0)) == 0x8000) %}
+            Stop
+          {% elif ((states('sensor.wr2_system_state') | int(default=0)) == 0x1400) %}
+            Standby
+          {% elif ((states('sensor.wr2_system_state') | int(default=0)) == 0x1200) %}
+            Initial Standby
+          {% elif ((states('sensor.wr2_system_state') | int(default=0)) == 0x1600) %}
+            Startup
+          {% elif ((states('sensor.wr2_system_state') | int(default=0)) == 0x0) %}
+            Running
+          {% elif ((states('sensor.wr2_system_state') | int(default=0)) == 0x5500) %}
+            Fault
+          {% elif ((states('sensor.wr2_system_state') | int(default=0)) == 0x1500) %}
+            Emergency Stop
+          {% elif ((states('sensor.wr2_system_state') | int(default=0)) == 0x1200) %}
+            Initial standby
+          {% elif ((states('sensor.wr2_system_state') | int(default=0)) == 0x9100) %}
+            Alarm run
+          {% elif ((states('sensor.wr2_system_state') | int(default=0)) == 0x8100) %}
+            Derating run
+          {% elif ((states('sensor.wr2_system_state') | int(default=0)) == 0x8200) %}
+            Dispatch run
+          {% elif ((states('sensor.wr2_system_state') | int(default=0)) == 0x1300) %}
+            Key stop
+          {% else %}
+            Unknown - should not see me!
+          {% endif %}
+
+      - name: WR2_Sungrow device type
+        unique_id: wr2_device_type
+        state: >-
+          {% if ((states('sensor.wr2_sungrow_device_type_code') | int(default=0))  == 0x243D) %}
+            SG3.0RT
+          {% elif ((states('sensor.wr2_sungrow_device_type_code') | int(default=0)) == 0x243E) %}
+            SG4.0RT
+          {% elif ((states('sensor.wr2_sungrow_device_type_code') | int(default=0)) == 0x2430) %}
+            SG5.0RT
+          {% elif ((states('sensor.wr2_sungrow_device_type_code') | int(default=0)) == 0x2431) %}
+            SG6.0RT
+          {% elif ((states('sensor.wr2_sungrow_device_type_code') | int(default=0)) == 0x243C) %}
+            SG7.0RT
+          {% elif ((states('sensor.wr2_sungrow_device_type_code') | int(default=0)) == 0x2432) %}
+            SG8.0RT
+          {% elif ((states('sensor.wr2_sungrow_device_type_code') | int(default=0)) == 0x2433) %}
+            SG10RT
+          {% elif ((states('sensor.wr2_sungrow_device_type_code') | int(default=0)) == 0x2434) %}
+            SG12RT
+          {% elif ((states('sensor.wr2_sungrow_device_type_code') | int(default=0)) == 0x2435) %}
+            SG15RT
+          {% elif ((states('sensor.wr2_sungrow_device_type_code') | int(default=0)) == 0x2436) %}
+            SG17RT
+          {% elif ((states('sensor.wr2_sungrow_device_type_code') | int(default=0)) == 0x2437) %}
+            SG20RT
+          {% else %}
+            Unknown device code!
+          {% endif %}
+
+input_select:
+  wr2_set_inverter_run_mode:
+    name: WR2_Inverter mode
+    options:
+      - "Enabled"
+      - "Shutdown"
+
+# Automations: Write modbus registers on input changes via GUI
+# note: If you change a value by the sliders, it will take up to 60 seconds until the state variables are updated
+# Unfortunately, I could not find a way to "force update" modbus registers, yet...
+automation:
+  - id: "automation_wr2_sungrow_inverter_state"
+    alias: "sungrow wr2 inverter state"
+    description: "Enables/ stops the inverter"
+    trigger:
+      - platform: state
+        entity_id:
+          - input_select.wr2_set_inverter_run_mode
+    condition: []
+    variables:
+      sg_start: 0xCF
+      sg_stop: 0xCE
+    action:
+      - service: modbus.write_register
+        data_template:
+          hub: WR2_Sungrow_SG6.0RT
+          slave: !secret sungrow_wr2_modbus_slave
+          address: 12999 # reg 13000
+          value: >
+            {% if is_state('input_select.wr2_set_inverter_run_mode', 'Enabled') %}
+            {{sg_start}}
+            {% else %}
+            {{sg_stop}}
+            {% endif %}
+    mode: single
+
+  - id: "automation_wr2_sungrow_inverter_state_input_selector_update"
+    alias: "sungrow wr2 inverter enable/ stop input selector update"
+    description: "Updates enable/ stops input selector"
+    trigger:
+      - platform: state
+        entity_id:
+          - sensor.wr2_system_state
+    condition: []
+    action:
+      - service: input_select.select_option
+        target:
+          entity_id: input_select.wr2_set_inverter_run_mode
+        data:
+          option: >
+            {% if is_state('sensor.wr2_sungrow_inverter_state', 'Stop') %}
+            "Shutdown"
+            {% else %}
+            "Enabled"
+            {% endif %}
+    mode: single
